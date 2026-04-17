@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<button onclick="test()">Test Order</button>
+
+<script>
+function test() {
+  fetch("https://totalfruit-api-production.up.railway.app/orders", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name: "Test Web",
+      phone: "08123",
+      address: "Pandeglang",
+      menu: "Dragon Fruit"
+    })
+  })
+  .then(r => r.text())
+  .then(t => alert(t));
+}
+</script>
+
+</body>
+</html>
