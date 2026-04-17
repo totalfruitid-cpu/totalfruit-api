@@ -1,3 +1,14 @@
+
+const pool = require('./db');
+
+pool.query(`
+CREATE TABLE IF NOT EXISTS orders (
+  id SERIAL PRIMARY KEY,
+  name TEXT,
+  menu TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+`);
 const express = require('express');
 const cors = require('cors');
 const app = express();
