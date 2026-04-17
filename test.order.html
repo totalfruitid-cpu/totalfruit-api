@@ -6,7 +6,7 @@
 
 <script>
 function test() {
-  fetch("https://totalfruit-api-production.up.railway.app/orders", {
+  fetch("https://totalfruit-api-production.up.railway.app/order", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -17,7 +17,8 @@ function test() {
     })
   })
   .then(r => r.text())
-  .then(t => alert(t));
+  .then(t => alert(t))
+  .catch(e => alert(e));
 }
 </script>
 
