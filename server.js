@@ -1,64 +1,20 @@
 const express = require('express');
-const cors = require('cors');
-const { Pool } = require('pg');
-
 const app = express();
-app.use(cors());
+const PORT = 8000;
+
 app.use(express.json());
 
-async function startServer() {
-  try {
-    const pool = new Pool({
-      connectionString: process.env.DATABASE_URL,
-      ssl: { rejectUnauthorized: false }
-    });
+// TEST ROUTE (cek server hidup)
+app.get('/', (req, res) => {
+  res.send('Server jalan bro!');
+});
 
-    // bikin table kalau belum ada
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS orders (
-        id SERIAL PRIMARY KEY,
-        name TEXT,
-        phone TEXT,
-        address TEXT,
-        menu TEXT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
-    `);
+// ROUTE TERIMA ORDER
+app.post('/orders', (req, res) => {
+  console.log('Order masuk:', req.body);
+  res.send('Order diterima bro!');
+});
 
-    console.log('DB connected & table ready');
-
-    // test root
-    app.get('/', (req, res) => {
-      res.send('Total Fruit API jalan 🚀');
-    });
-
-    // kirim order
-    app.post('/order', async (req, res) => {
-      const { name, phone, address, menu } = req.body;
-
-      await pool.query(
-        'INSERT INTO orders (name, phone, address, menu) VALUES ($1,$2,$3,$4)',
-        [name, phone, address, menu]
-      );
-
-      res.send('Order masuk!');
-    });
-
-    // lihat semua order (admin)
-    app.get('/orders', async (req, res) => {
-      const result = await pool.query(
-        'SELECT * FROM orders ORDER BY id DESC'
-      );
-      res.json(result.rows);
-    });
-
-    const PORT = process.env.PORT || 3000;
-    app.listen(PORT, () => console.log('Server jalan di port ' + PORT));
-
-  } catch (err) {
-    console.error('DB init error:', err);
-    process.exit(1);
-  }
-}
-
-startServer();
+app.listen(PORT, () => {
+  console.log(`Server running di http://localhost:${PORT}`);
+});
