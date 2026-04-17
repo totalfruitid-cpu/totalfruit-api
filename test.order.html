@@ -1,26 +1,14 @@
-<!DOCTYPE html>
-<html>
-<body>
-
-<button onclick="test()">Test Order</button>
-
 <script>
-function test() {
-  fetch("https://totalfruit-api-production.up.railway.app/order", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      name: "Test Web",
-      phone: "08123",
-      address: "Pandeglang",
-      menu: "Dragon Fruit"
-    })
+fetch("https://totalfruit-api-production.up.railway.app/order", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    name: "Test Order",
+    menu: "Dragon Fruit",
+    qty: 1
   })
-  .then(r => r.text())
-  .then(t => alert(t))
-  .catch(e => alert(e));
-}
+})
+.then(res => res.json())
+.then(data => alert("Sukses: " + JSON.stringify(data)))
+.catch(err => alert("Error: " + err));
 </script>
-
-</body>
-</html>
