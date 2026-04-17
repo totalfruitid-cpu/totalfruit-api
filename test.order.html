@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Total Fruit Order</title>
+</head>
+<body>
+  <h2>Order Total Fruit</h2>
+
+  <form id="orderForm">
+    <input type="text" id="name" placeholder="Nama" required><br><br>
+    <input type="text" id="phone" placeholder="No HP" required><br><br>
+    <input type="text" id="address" placeholder="Alamat" required><br><br>
+    <input type="text" id="menu" placeholder="Menu" required><br><br>
+    <button type="submit">Pesan</button>
+  </form>
+
+  <script>
+    document.getElementById('orderForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const data = {
+        name: document.getElementById('name').value,
+        phone: document.getElementById('phone').value,
+        address: document.getElementById('address').value,
+        menu: document.getElementById('menu').value
+      };
+
+      await fetch('https://totalfruit-api-production.up.railway.app/order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      alert('Order berhasil dikirim!');
+    });
+  </script>
+</body>
+</html>
