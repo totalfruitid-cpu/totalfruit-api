@@ -1,33 +1,39 @@
+const express = require('express');
+const cors = require('cors');
+const { Pool } = require('pg');
 
-const pool = require('./db');
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
+});
 
 pool.query(`
 CREATE TABLE IF NOT EXISTS orders (
   id SERIAL PRIMARY KEY,
   name TEXT,
+  phone TEXT,
+  address TEXT,
   menu TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 `);
-const express = require('express');
-const cors = require('cors');
-const app = express();
-app.use(cors());
-app.use(express.json());
-
-const menu = [
-  { id: 1, name: "Jus Alpukat", price: 15000, img: "https://i.imgur.com/8fKzXyL.png" },
-  { id: 2, name: "Jus Mangga", price: 12000, img: "https://i.imgur.com/7dLwPqM.png" },
-  { id: 3, name: "Salad Buah", price: 20000, img: "https://i.imgur.com/9eNrRtS.png" },
-  { id: 4, name: "Es Buah", price: 10000, img: "https://i.imgur.com/5kMwVyN.png" }
-];
-
-app.get('/data', (req, res) => {
-  res.json(menu);
-});
 
 app.get('/', (req, res) => {
-  res.send('TotalFruit API nyala bro');
+  res.send('Total Fruit API jalan 🚀');
 });
 
-app.listen(3000, () => console.log('API jalan di port 3000'));
+app.post('/order', async (req, res) => {
+  const { name, phone, address, menu } = req.body;
+  await pool.query(
+    'INSERT INTO orders (name, phone, address, menu) VALUES ($1,$2,$3,$4)',
+    [name, phone, address, menu]
+  );
+  res.send('Order masuk!');
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log('Server jalan di port ' + PORT));
